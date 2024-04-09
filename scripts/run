@@ -1,0 +1,118 @@
+#!/bin/bash
+
+script_path=$(realpath "$(dirname "$0")")/
+asset_path=$script_path/assets
+
+print_with_color() {
+    color=''
+    case "$1" in
+    black)
+        color="0;30"
+        ;;
+    darkGray)
+        color="1;30"
+        ;;
+    red)
+        color="0;31"
+        ;;
+    lightRed)
+        color="1;31"
+        ;;
+    green)
+        color="0;32"
+        ;;
+    lightGreen)
+        color="1;32"
+        ;;
+    brown/Orang)
+        color="0;33"
+        ;;
+    yellow)
+        color="1;33"
+        ;;
+    blue)
+        color="0;34"
+        ;;
+    lightBlue)
+        color="1;34"
+        ;;
+    purple)
+        color="0;35"
+        ;;
+    lightPurple)
+        color="1;35"
+        ;;
+    cyan)
+        color="0;36"
+        ;;
+    lightCyan)
+        color="1;36"
+        ;;
+    lightGray)
+        color="0;37"
+        ;;
+    white | *)
+        color="1;37"
+        ;;
+    esac
+
+    echo -e "[\e[${color}m$2\e[0m] $3"
+}
+
+print_info() {
+    print_with_color blue INFO "$1"
+}
+
+print_error() {
+    print_with_color red ERROR "$1"
+}
+
+# Replace $1 = string, $2 = from, $3 = to
+replace_all() {
+    # Perhap use Python to implement it is the easiest way!
+    python3 -c "print(\"$1\".replace(\"$2\", \"$3\"))"
+}
+
+compile() {
+    riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S "$1".c -o "$1"
+}
+
+compile_all() {
+    riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S "$1".c "$1.S" -o "$1"
+}
+
+check() {
+    print_info "Dump assembly code..."
+    riscv64-unknown-elf-objdump -d "$1"
+
+    print_info "Check EFI information..."
+    riscv64-unknown-elf-readelf -h "$1"
+}
+
+simulate() {
+    qemu-system-riscv32 -nographic -machine virt -bios none -kernel "$1"
+}
+
+case $1 in
+rvc)
+    compile "$2"
+    ;;
+rvc_all)
+    compile_all "$2" "$3"
+    ;;
+check)
+    check "$2"
+    ;;
+sim)
+    simulate "$2"
+    ;;
+clean)
+    rm "$2"
+    ;;
+help)
+    echo -e "This is a script that collects useful commands for lab6 :)\nAuthor: Eroiko"
+    ;;
+*)
+    echo -e "Command not found :("
+    ;;
+esac
