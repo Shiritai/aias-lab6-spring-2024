@@ -77,7 +77,7 @@ compile() {
     riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S "$1".c -o "$1"
 }
 
-compile_all() {
+compile_pair() {
     riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S "$1".c "$1.S" -o "$1"
 }
 
@@ -97,8 +97,11 @@ case $1 in
 rvc)
     compile "$2"
     ;;
-rvc_all)
-    compile_all "$2" "$3"
+rvc_pair)
+    compile_pair "$2" "$3"
+    ;;
+hw3c)
+    riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S hw3/main.c hw3/sudoku_2x2_c.c hw3/sudoku_2x2_asm.S -o hw3/"$1"
     ;;
 check)
     check "$2"

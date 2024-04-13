@@ -4,24 +4,38 @@
 #include <stdlib.h>
 #define SIZE 16
 
+// test 1
+// char test_c_data[16] = {0, 2, 0, 3,
+//                         1, 3, 4, 0,
+//                         2, 0, 0, 4,
+//                         3, 0, 2, 0};
+
+// char test_asm_data[16] = {0, 2, 0, 3,
+//                           1, 3, 4, 0,
+//                           2, 0, 0, 4,
+//                           3, 0, 2, 0};
+
+// test 2
 char test_c_data[16] = {0, 0, 2, 0,
                         0, 0, 0, 4,
                         2, 3, 0, 0,
                         0, 4, 0, 0};
 
-char test_asm_data[16] = {0, 0, 2, 0, 0, 0, 0, 4, 2, 3, 0, 0, 0, 4, 0, 0};
+char test_asm_data[16] = {0, 0, 2, 0,
+                          0, 0, 0, 4,
+                          2, 3, 0, 0,
+                          0, 4, 0, 0};
 
 void print_meow() {
   puts("Meow\n");
-  // fflush(stdout);
 }
 
 void print_val(int v) {
   char str[25];
   itoa(v, str, 10);
-  puts("val: ");
+  puts("value: [");
   puts(str);
-  puts("\n");
+  puts("]\n");
 }
 
 void print_single_result(char *ls) {
@@ -57,20 +71,20 @@ void print_sudoku_result() {
   }
 
   if (flag == 1) {
-    puts("\nyour c & assembly got different result ... QQ ...\n");
+    puts("your c & assembly got different result ... QQ ...\n");
   } else {
-    puts("\n\nyour c & assembly got same result!\n");
+    puts("your c & assembly got same result!\n");
   }
 }
 
-int sudoku_2x2_asm(char *test_asm_data); // TODO, sudoku_2x2_asm.S
+int sudoku_2x2_asm(char *test_asm_data);
 
-int sudoku_2x2_c(char *test_c_data); // TODO, sudoku_2x2_c.S
+int sudoku_2x2_c(char *test_c_data);
 
 int main() {
-  // print_val(
-  // );
-  sudoku_2x2_c(test_c_data);
+  puts("Is sudoku solvable using C function? ");
+  print_val(sudoku_2x2_c(test_c_data));
+  puts("Is sudoku solvable using risc-v assembly? ");
   print_val(sudoku_2x2_asm(test_asm_data));
   print_sudoku_result();
   return 0;
