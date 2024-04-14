@@ -103,6 +103,12 @@ rvc_pair)
 hw3c)
     riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S hw3/main.c hw3/sudoku_2x2_c.c hw3/sudoku_2x2_asm.S -o hw3/"$1"
     ;;
+bonus_c)
+    gcc Bonus/test_c.c Bonus/maxpool2d.c -o Bonus/maxpool2d_c && ./Bonus/maxpool2d_c
+    ;;
+bonus_asm)
+    riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostartfiles -T"${asset_path}"/virt.lds "${asset_path}"/boot.S Bonus/test_asm.c Bonus/maxpool2d.c Bonus/maxpool2d.S -o Bonus/"$1"
+    ;;
 check)
     check "$2"
     ;;
